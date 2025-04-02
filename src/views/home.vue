@@ -43,14 +43,17 @@ import Navtree from "@/components/Navtree.vue";
 import Navtreep from "@/components/Navtreep.vue";
 import MainHeader from "@/components/MainHeader.vue";
 import { ref, onMounted, onBeforeUnmount, reactive, provide } from "vue";
-import { getToken, setToken, setBranchId } from "@/utils/auth";
+import { getToken, setToken, setBranchId, removeToken } from "@/utils/auth";
 import { getInfo } from "@/api/login";
 import { getBranchInfo } from "@/api/branch";
 import { ElDrawer, ElButton } from "element-plus";
 import { useIsMobileStore } from "@/stores/isMobileStore";
+import { jwtDecode } from "jwt-decode"; // 使用命名导入
+import { useRoute, useRouter } from "vue-router";
 
 const isMobileStore = useIsMobileStore();
-
+const token = getToken();
+const router = useRouter();
 
 // 这里发请求获取支部信息
 const USER_INFO = reactive({});
@@ -59,17 +62,36 @@ const BRANCH_INFO = reactive({ greatCount: "这个疑似砍了" });
 provide("BRANCH_INFO", BRANCH_INFO);
 provide("USER_INFO", USER_INFO);
 
-if (getToken()) {
-  getInfo().then((v) => {
-    if (!v.code) {
-      Object.assign(USER_INFO, v.data);
-      const partybranchId = USER_INFO.partybranchId;
-      setBranchId(USER_INFO.partybranchId);
-      getBranchInfo(partybranchId).then((v) => {
-        Object.assign(BRANCH_INFO, v.data);
+if (token) {
+  try {
+    const decodedToken = jwtDecode(token);
+    const currentTime = Math.floor(Date.now() / 1000);
+
+    console.log(decodedToken);
+    
+
+    if (decodedToken.exp && decodedToken.exp < currentTime) {
+      ElMessage.error("登录失效，请重新登录");
+      removeToken();
+      router.push("/login");
+    } else {
+      getInfo().then((v) => {
+        if (!v.code) {
+          Object.assign(USER_INFO, v.data);
+          const partybranchId = USER_INFO.partybranchId;
+          setBranchId(USER_INFO.partybranchId);
+          getBranchInfo(partybranchId).then((v) => {
+            Object.assign(BRANCH_INFO, v.data);
+          });
+        }
       });
     }
-  });
+  } catch (error) {
+    console.error("Token 解析失败:", error);
+    ElMessage.error("Token 无效，请重新登录");
+    removeToken();
+    router.push("/login");
+  }
 }
 const drawer = ref(false);
 </script>

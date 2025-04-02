@@ -18,6 +18,7 @@
     "echarts": "^5.4.3",
     "element-plus": "^2.7.0",
     "js-cookie": "^3.0.1",
+    "jwt-decode": "^4.0.0",
     "pinia": "^2.2.5",
     "postcss-pxtorem": "^6.0.0",
     "qs": "^6.11.2",
