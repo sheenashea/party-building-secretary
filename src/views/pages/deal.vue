@@ -259,34 +259,24 @@ const showMuti = ref(true);
 const date = ref("");
 const options = [
   {
-    label: "未提交入党申请书",
+    label: "入党申请人",
     value: 0,
   },
   {
-    label: "入党申请人",
+    label: "入党积极分子",
     value: 1,
   },
   {
-    label: "入党积极分子",
+    label: "发展对象",
     value: 2,
   },
   {
-    label: "发展对象",
-    value: 3,
-  },
-  {
     label: "中共预备党员",
-    value: 4,
+    value: 3,
   },
 ];
 const options_little = [
-  [
-    {
-      label: "入党申请人",
-      value: 0,
-      stage: 1,
-    },
-  ],
+
   [
     {
       label: "群团组织推优",
