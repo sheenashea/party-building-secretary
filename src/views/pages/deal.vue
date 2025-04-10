@@ -50,7 +50,7 @@
               style="width: 100%; font-size: 14px; margin-left: 10px"
               color="#c7242f"
               @click="multiProcessAccess()"
-              :disabled="stageValue === 0"
+              :disabled="stageValue === 4"
             >
               通过选中成员
             </el-button>
@@ -110,7 +110,7 @@
           style="width: 100%; font-size: 16px; margin-top: 10px"
           color="#c7242f"
           @click="multiProcessAccess()"
-          :disabled="stageValue === 0"
+          :disabled="stageValue === 2"
         >
           通过选中成员
         </el-button>
